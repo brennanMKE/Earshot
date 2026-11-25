@@ -1,0 +1,67 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  color: #212c29;
+  background: #f4f3ec;
+  line-height: 1.5;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; padding: clamp(1.25rem, 6vw, 4rem) 1rem; }
+main { width: min(100%, 38rem); margin-inline: auto; }
+header { margin-bottom: 1.5rem; }
+h1, h2 { margin: 0; line-height: 1.15; letter-spacing: -.04em; }
+h1 { font-size: clamp(2.6rem, 8vw, 4rem); }
+h2 { font-size: 1.45rem; }
+p { margin: .45rem 0 0; color: #52615a; }
+form, section {
+  padding: clamp(1rem, 4vw, 1.75rem);
+  background: #fffefa;
+  border: 1px solid #d8ded3;
+  border-radius: 1.1rem;
+}
+form { display: grid; gap: .55rem; }
+label { font-weight: 650; }
+.upload {
+  background: #edf2e9;
+  border: 1px dashed #92a38e;
+  border-radius: .65rem;
+  display: grid;
+  gap: .5rem;
+  margin-bottom: .65rem;
+  padding: .9rem;
+}
+input, select, button, textarea { font: inherit; }
+input[type="file"] { width: 100%; min-width: 0; }
+input[type="file"]::file-selector-button {
+  padding: .35rem .65rem;
+  margin-inline-end: .5rem;
+}
+select, input[type="password"], textarea {
+  border-radius: .5rem;
+  border: 1px solid #a7b3a7;
+  color: inherit;
+  background: #fffefa;
+  width: 100%;
+  padding: .55rem .65rem;
+  margin-bottom: .55rem;
+}
+button {
+  background: #235744;
+  color: white;
+  border: 0;
+  border-radius: .55rem;
+  padding: .7rem 1.15rem;
+  font-weight: 650;
+  justify-self: start;
+  cursor: pointer;
+}
+button:hover { background: #184434; }
+button:disabled { opacity: .65; cursor: default; }
+.secondary { background: #fffefa; border: 1px solid #92a38e; color: #235744; }
+.secondary:hover { background: #f0f6ed; }
+#record-help { font-size: .9rem; }
+#preview { width: 100%; }
+:focus-visible { outline: 2px solid #235744; outline-offset: 2px; }
+#status, section { margin-top: 1rem; }
+#status[data-error] { color: #952c28; }
+textarea { margin: .75rem 0 0; resize: vertical; }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>local.earshot.server</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>EARSHOT_BINARY</string>
+        <string>serve</string>
+        <string>--addr</string>
+        <string>127.0.0.1:8090</string>
+        <string>--tokens-file</string>
+        <string>EARSHOT_TOKENS_FILE</string>
+        <string>--python</string>
+        <string>EARSHOT_PYTHON</string>
+        <string>--ffmpeg</string>
+        <string>EARSHOT_FFMPEG</string>
+        <string>--model-dir</string>
+        <string>EARSHOT_MODEL_DIR</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>EARSHOT_HOME</string>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+    <key>ExitTimeOut</key>
+    <integer>35</integer>
+    <key>StandardOutPath</key>
+    <string>EARSHOT_STDOUT</string>
+    <key>StandardErrorPath</key>
+    <string>EARSHOT_STDERR</string>
+</dict>
+</plist>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Earshot</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Earshot</h1>
+      <p>Transcribe an audio clip on your Mac.</p>
+    </header>
+    <form id="transcription" autocomplete="off" data-max-bytes="{{.MaxBytes}}" data-max-seconds="{{.MaxSeconds}}">
+      <div class="upload">
+        <label for="audio">Audio clip</label>
+        <input id="audio" name="file" type="file" accept="audio/*,.m4a,.webm,.mp3,.wav,.ogg">
+        <button id="record" class="secondary" type="button" hidden>Record audio</button>
+        <p id="record-help" hidden></p>
+        <audio id="preview" controls preload="metadata" hidden></audio>
+      </div>
+      <label for="language">Language</label>
+      <select id="language" name="language">
+        <option value="">Detect automatically</option>
+        <option value="ko">Korean</option>
+        <option value="en">English</option>
+      </select>
+      {{if .RequireToken}}
+      <label for="token">Access token</label>
+      <input id="token" type="password" autocomplete="off" spellcheck="false" required>
+      {{end}}
+      <button id="submit" type="submit" disabled>Transcribe</button>
+    </form>
+    <p id="status" role="status" aria-live="polite" hidden></p>
+    <section id="result" hidden>
+      <h2>Transcript</h2>
+      <p id="details"></p>
+      <textarea id="text" aria-label="Transcript text" readonly rows="6"></textarea>
+    </section>
+  </main>
+</body>
+</html>

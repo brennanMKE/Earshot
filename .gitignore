@@ -1,0 +1,19 @@
+.DS_Store
+/bin/
+/build/
+/.cache/
+/.venv/
+__pycache__/
+*.test
+coverage.out
+.env
+.env.*
+!.env.example
+*.log
+*.gguf
+*.safetensors
+ggml-*.bin
+tokens.txt
+
+# Machine-specific deployment notes
+/LOCAL.md
