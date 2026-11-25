@@ -1,15 +1,17 @@
 # Earshot: plan
 
 Earshot is a local speech-to-text server for Apple Silicon Macs. It takes an audio
-clip and returns its transcript using Whisper. Agora can call multiple instances
+clip and returns its transcript using Whisper. Clients can call multiple instances
 over a private network for failover.
 
 ## Why
 
-Agora users can record voice messages for translation between Korean and English.
-Agora sends uploaded audio to Earshot, stores the transcript with the message, and
-shows it below the audio. The translation agent receives the transcript as text.
-Agora's integration is separate work. Earshot provides the HTTP contract below.
+Hosted speech-to-text costs money per use and sends audio to a third party. Apple
+Silicon Macs can run Whisper locally, fast enough for interactive use. Earshot puts
+that behind a small HTTP service, so any app (a chat app with voice messages, for
+example) can send an uploaded clip and get its transcript back as text, while the
+audio stays on your own hardware. Client integrations are separate work; Earshot
+provides the HTTP contract below.
 
 ## Goals
 
@@ -30,9 +32,9 @@ Agora's integration is separate work. Earshot provides the HTTP contract below.
 
 - Streaming or live transcription. Clips are whole files.
 - Text-to-speech.
-- Translation. Agora delegates that to its translation agent.
+- Translation. Clients can translate the transcript themselves.
 - Diarization (who is speaking).
-- Agora's UI, upload flow and storage.
+- Clients' UI, upload flow and storage.
 
 ## Engine
 
@@ -58,7 +60,7 @@ engine over HTTP or by running it as a process, not through cgo bindings.
 
 ## HTTP contract
 
-Agora depends on a stable HTTP contract. See [CONTRACT.md](CONTRACT.md) for the
+Clients depend on a stable HTTP contract. See [CONTRACT.md](CONTRACT.md) for the
 client-facing specification.
 
 ### `POST /v1/transcribe`
@@ -97,14 +99,13 @@ An error is JSON shaped as `{"error": {"code": "<code>", "message": "<text>"}}`:
 | 401 | `unauthorized` | The token is missing or wrong. |
 | 413 | `too_large` | The file is over 25 MiB, or the audio is over 10 minutes. Both limits can be configured. |
 | 415 | `unsupported_media` | ffmpeg can't decode the file. |
-| 422 | `no_speech` | The clip is silent or has no speech. Agora shows "no speech" rather than an empty transcript. |
-| 503 | `busy` | The queue is full; a `Retry-After` header says when to try again. Agora then tries the next server. |
+| 422 | `no_speech` | The clip is silent or has no speech. A client can show "no speech" rather than an empty transcript. |
+| 503 | `busy` | The queue is full; a `Retry-After` header says when to try again. A client can then try the next server. |
 | 503 | `unavailable` | The engine isn't loaded or has crashed. |
 
 ### Other endpoints
 
-- `GET /healthz` returns `ok <version>` as `text/plain`, with no auth needed, the
-  same way Agora's own `/healthz` works.
+- `GET /healthz` returns `ok <version>` as `text/plain`, with no auth needed.
 - `GET /v1/info` (needs auth) returns:
   - the model and engine;
   - the languages it supports;
@@ -127,7 +128,7 @@ Set through flags or environment variables:
 | Variable | Default | |
 |---|---|---|
 | `EARSHOT_ADDR` | `127.0.0.1:8090` | Bind to localhost only. A reverse proxy provides private network access. |
-| `EARSHOT_TOKENS_FILE` | — | Sha256 hashes of the accepted bearer tokens, one per line, each with a label (`agora`, …). The server refuses to start without this file unless `--insecure-no-auth` is passed. |
+| `EARSHOT_TOKENS_FILE` | — | Sha256 hashes of the accepted bearer tokens, one per line, each with a label naming the client. The server refuses to start without this file unless `--insecure-no-auth` is passed. |
 | `EARSHOT_MODEL` | `large-v3-turbo` | |
 | `EARSHOT_MODEL_DIR` | `~/.cache/earshot/models` | Downloaded at first start or with `earshot fetch-model`, checked against a pinned sha256. |
 | `EARSHOT_MAX_BYTES` | `26214400` | |
@@ -149,8 +150,8 @@ Deliverables:
   `~/Library/Logs/earshot/`.
 - `deploy/install.sh` to build or install the binary, fetch the model, install the
   LaunchAgent, and print the reverse-proxy route to add.
-- `docs/deploy.md` with a generic proxy route, instructions for provisioning an
-  Agora token, and a `curl` check from an authorized client.
+- `docs/deploy.md` with a generic proxy route, instructions for provisioning a
+  client token, and a `curl` check from an authorized client.
 
 ## Tests
 
@@ -199,14 +200,14 @@ Deliverables:
    (no transcripts) and graceful shutdown.
 4. **Deploy.** Install the LaunchAgent and configure the reverse proxy.
    Verify each instance from an authorized client with `curl`.
-5. **Hand off to Agora.** Write `CONTRACT.md` and a short note for the Agora issue:
-   the `STT_URL`-style setting and measured speeds. Share instance URLs and the
+5. **Hand off to clients.** Write `CONTRACT.md` and a short integration note:
+   how to list instances for failover, and measured speeds. Share instance URLs and the
    bearer token privately.
 
 ## Open questions
 
 - Can `large-v3` fit alongside the existing workload on an 8 GiB host?
-- Should a `prompt` of room-specific names be passed by default? Agora could send
-  the room's member names.
+- Should a `prompt` of context-specific names be passed by default? A client could
+  send the names of the people in a conversation.
 - Should a separate Pi or Linux fallback exist? If all instances are down,
-  Agora can post the audio with "transcript unavailable".
+  a client can keep the audio and mark the transcript unavailable.

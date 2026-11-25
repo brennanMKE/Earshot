@@ -1,7 +1,7 @@
 # Earshot
 
 A local speech-to-text server for Apple Silicon. Earshot uses Whisper to
-transcribe audio clips for Agora voice messages.
+transcribe audio clips, such as voice messages, for other apps on a private network.
 
 ## Run locally
 

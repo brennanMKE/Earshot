@@ -19,7 +19,7 @@ uv venv --python 3.12 "$app/.venv"
 uv pip install --python "$app/.venv/bin/python" mlx-whisper==0.4.3 mlx==0.32.5
 ```
 
-Generate one strong bearer token for Agora and store it in its secret
+Generate one strong bearer token for each client and store it in the client's secret
 configuration. Put only the SHA-256 hash and label in each instance's token
 file. This example saves the raw token in a local Git-ignored file and writes
 a hash file that can be copied to the instances.
@@ -28,7 +28,7 @@ a hash file that can be copied to the instances.
 umask 077
 token=$(openssl rand -hex 32)
 (set -C; printf 'EARSHOT_TOKEN=%s\n' "$token" > .env.earshot) || exit 1
-printf '%s' "$token" | shasum -a 256 | awk '{print $1, "agora"}' > tokens.txt
+printf '%s' "$token" | shasum -a 256 | awk '{print $1, "client"}' > tokens.txt
 unset token
 ```
 
@@ -89,7 +89,7 @@ photon restart --config "$PROXY_CONFIG"
 
 ## Verify from an authorized client
 
-Run these from the same network context as Agora. Set `EARSHOT_BASE` to the
+Run these from the same network context as the client. Set `EARSHOT_BASE` to the
 private instance URL including the `/earshot` prefix and load the token
 from the client's secret configuration. Repeat for each instance.
 

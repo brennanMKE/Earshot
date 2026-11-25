@@ -9,7 +9,7 @@ Keep a long-lived Python worker behind the Go service so MLX can reuse the
 loaded model. The mlx-whisper 0.4.3 transcription API returns a language code
 and per-segment no-speech probabilities. It computes language probabilities
 internally and omits them from its result. Settle how the HTTP contract
-represents unavailable language confidence before Agora relies on it.
+represents unavailable language confidence before clients rely on it.
 
 Both benchmark hosts had 8 GiB of unified memory and ran macOS 27.0 (26A428).
 
