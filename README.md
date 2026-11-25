@@ -1,5 +1,7 @@
 # Earshot
 
+![A green studio microphone between an audio waveform and lines of transcript](docs/images/earshot-banner.png)
+
 A local speech-to-text server for Apple Silicon. Earshot uses Whisper to
 transcribe audio clips, such as voice messages, for other apps on a private network.
 
